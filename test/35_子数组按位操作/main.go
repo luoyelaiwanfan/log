@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"encoding/base64"
+)
 
 func main() {
 
@@ -9,11 +12,16 @@ func main() {
 }
 
 
-func fetchRes(A []int, i int, j int, hash map[int]int) int {
-	key := i+j
+func fetchRes(A []int, i int, j int, hash map[string]int) int {
+	//fmt.Println("i:",i, "j:",j)
+
+	//fmt.Println("key:", key)
+
+
 	if i == j {
 		return A[i]
 	}
+	key := string(i) + string(j)
 	if j-i == 1 {
 		res := A[i] | A[j]
 		hash[key] = res
@@ -35,11 +43,11 @@ func subarrayBitwiseORs(A []int) int {
 		return 0
 	}
 
-	hash := make(map[int]int,0)
+	hash := make(map[string]int,0)
 	mapRes :=make(map[int]int,0)
 	for i:=0;i<l;i++ {
 		mapRes[A[i]] = 0
-		fmt.Println(mapRes)
+		//fmt.Println(mapRes)
 		for j:=i+1;j<l;j++ {
 			mapRes[fetchRes(A, i,j,hash)] = 0
 		}

@@ -1,67 +1,54 @@
 package main
 
-import "fmt"
+import (
+	"bytes"
+	"fmt"
+	"math/rand"
+)
 
 func main() {
 
-	fmt.Println(makesquare([]int{5, 5, 5, 5, 4, 4, 4, 4, 3, 3, 3, 3}))
-	fmt.Println(makesquare([]int{1,1,2,2,2}))
+	canConstruct("a", "bcd")
+	ransomNoteByte := []byte("test")
+	index := 3
+	ransomNoteByte = append(ransomNoteByte[:index], ransomNoteByte[index+1:]...)
 
+	fmt.Println(string(ransomNoteByte))
+
+	rand.Int31n()
 }
 
-func sort(nums []int) []int {
-	l := len(nums)
 
-	for i := 0; i < l; i++ {
-		for j := i + 1; j < l; j++ {
-			if nums[i] < nums[j] {
-				t := nums[j]
-				nums[j] = nums[i]
-				nums[i] = t
-			}
+type Solution struct {
+	nums []int
+}
+
+
+func Constructor(nums []int) Solution {
+	s := Solution{nums}
+
+	return s
+}
+
+
+func (this *Solution) Pick(target int) int {
+	res := make([]int, 0)
+
+	for i, v :=  range this.nums {
+		if v == target {
+			res = append(res, i)
 		}
-
-	}
-	return nums
-}
-
-func makesquare(nums []int) bool {
-	sum := 0
-
-	if len(nums) < 4 {
-		return false
-	}
-	for _, v := range nums {
-		sum = sum + v
 	}
 
-	if sum%4 != 0 {
-		return false
-	}
-	nums = sort(nums)
+	index := rand.Intn(len(res))
 
-	bucket := make([]int, 4)
-
-	return genetate(0, len(nums), nums, sum/4, bucket)
+	return res[index]
 
 }
 
 
-
-func genetate(index int, l int, nums []int, target int, bucket []int) bool {
-	if index == l {
-		return bucket[0] == target && bucket[1] == target && bucket[2] == target && bucket[3] == target
-	}
-
-	for j := 0; j < 4; j++ {
-		if bucket[j]+nums[index] > target {
-			continue
-		}
-		bucket[j] += nums[index] //放在j桶里
-		if genetate(index+1, l, nums, target, bucket) {
-			return true
-		}
-		bucket[j] -= nums[index] //说明 不应该把第i根火柴放在j桶
-	}
-	return false
-}
+/**
+ * Your Solution object will be instantiated and called as such:
+ * obj := Constructor(nums);
+ * param_1 := obj.Pick(target);
+ */
