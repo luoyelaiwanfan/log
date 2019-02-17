@@ -20,11 +20,17 @@ func login(w http.ResponseWriter,r *http.Request){
 	}
 }
 
+func wsHandle(w http.ResponseWriter,r *http.Request){
+	w.Write([]byte("hello"))
+
+}
+
 func main() {
 	http.HandleFunc("/login", login)
+	http.HandleFunc("/ws", wsHandle)
 	err := http.ListenAndServe(":9090", nil)
 	if err!= nil {
 		beego.Info("err:", err)
 	}
-	http.SetCookie()
+	//http.SetCookie()
 }

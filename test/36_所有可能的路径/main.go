@@ -10,31 +10,31 @@ func main() {
 	fmt.Println(allPathsSourceTarget(graph))
 }
 
-func find(start int, end int, graph *[][]int) [][]int {
-
-	paths := make([][]int, 0)
-	for _, v1 := range (*graph)[start] {
-		if v1 == end {
-			paths = append(paths, []int{start, end})
-		}
-		res := find(v1, end, graph)
-
-		for _, v2 := range res {
-			extendV2 := make([]int, 0)
-			extendV2 = append(extendV2, start)
-			extendV2 = append(extendV2, v2...)
-			paths = append(paths, extendV2)
-		}
-
-	}
-
-	return paths
-}
-
-func allPathsSourceTarget(graph [][]int) [][]int {
-	paths := find(0, len(graph)-1, &graph)
-	return paths
-}
+//func find(start int, end int, graph *[][]int) [][]int {
+//
+//	paths := make([][]int, 0)
+//	for _, v1 := range (*graph)[start] {
+//		if v1 == end {
+//			paths = append(paths, []int{start, end})
+//		}
+//		res := find(v1, end, graph)
+//
+//		for _, v2 := range res {
+//			extendV2 := make([]int, 0)
+//			extendV2 = append(extendV2, start)
+//			extendV2 = append(extendV2, v2...)
+//			paths = append(paths, extendV2)
+//		}
+//
+//	}
+//
+//	return paths
+//}
+//
+//func allPathsSourceTarget(graph [][]int) [][]int {
+//	paths := find(0, len(graph)-1, &graph)
+//	return paths
+//}
 
 
 //func helper(graph [][]int, cur int,path []int,ret [][]int) [][]int {
@@ -55,3 +55,30 @@ func allPathsSourceTarget(graph [][]int) [][]int {
 //	ret := helper(graph, 0, nil, nil)
 //	return ret
 //}
+
+
+
+func find(start int, end int, graph [][]int)[][]int {
+	paths := make([][]int, 0)
+	for _,v := range graph[start] {
+		if v == end {//能够到达的有效路径
+			paths = append(paths,[]int{start,end})
+		}
+		res := find(v,end,graph)//不能直接到达 看看能否间接到达
+		for _,v2:= range res {
+			//v3 := []int{start,}
+
+
+			v3 := make([]int,0)
+			v3 = append(v3,start)
+
+			paths = append(paths, append(v3, v2...))
+		}
+	}
+	return paths
+}
+
+
+func allPathsSourceTarget(graph [][]int) [][]int {
+	return find(0,len(graph)-1, graph)
+}

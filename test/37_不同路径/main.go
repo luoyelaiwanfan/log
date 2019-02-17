@@ -11,50 +11,56 @@ func main() {
     fmt.Println(uniquePathsWithObstacles(v))
 }
 
-type point struct {
-	x int
-	y int
-}
-
-
-
-var direction = []point{{0,1}, {1,0}}
-func check(p *point, graph *[][]int) bool {
-	if p.x > xMax {
-		return false
-	}
-	if p.y > yMax {
-		return false
-	}
-	if (*graph)[p.x][p.y] == 1 {
-		return false
-	}
-	return true
-}
-
-var xMax int
-var yMax int
-
-func find(start *point, end *point, graph *[][]int) int {
-
-	if start.x == end.x && start.y == end.y {
-		return 1
-	}
-	num := 0
-	for _, v := range direction {
-		nextStart := &point{start.x + v.x, start.y + v.y}
-		if check(nextStart, graph) != false {
-			num += find(nextStart, end, graph)
-		}
-	}
-	return num
-}
 
 func uniquePathsWithObstacles(obstacleGrid [][]int) int {
-	xMax = len(obstacleGrid) - 1
-	yMax = len((obstacleGrid)[0]) - 1
-	if obstacleGrid[0][0] == 1 || obstacleGrid[xMax][yMax] == 1 {
+	m := len(obstacleGrid)
+	if m == 0{
 		return 0
 	}
-	return find(&point{0,0}, &point{xMax,yMax}, &obstacleGrid)
+
+	n := len(obstacleGrid[0])
+	if n == 0 {
+		return 0
+	}
+	if obstacleGrid[0][0] == 1 {
+		return 0
+	}
+
+	 memPath := make([][]int, m)
+
+	 for i:=0;i<m;i++ {
+		 memPath[i] = make([]int, n)
+	 }
+
+	memPath[0][0] = 1
+
+	for i:=0;i<m;i++ {
+		if obstacleGrid[i][0] == 1 {
+			break
+		}
+		memPath[i][0] = 1
+ 	}
+
+	for j:=0;j<n;j++ {
+		if obstacleGrid[0][j] == 1 {
+			break
+		}
+		memPath[0][j] = 1
+	}
+
+	for i:=1;i<m;i++ {
+		for j:=1;j<n;j++ {
+
+			if obstacleGrid[i][j] == 1 {
+				memPath[i][j] = 0
+			} else {
+
+					memPath[i][j] = memPath[i-1][j] + memPath[i][j-1]
+
+			}
+		}
+	}
+
+	//fmt.Println(memPath)
+	return memPath[m-1][n-1]
 }
